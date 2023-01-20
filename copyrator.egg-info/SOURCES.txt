@@ -1,0 +1,13 @@
+README.md
+setup.py
+copyrator/__init__.py
+copyrator/cli.py
+copyrator/const.py
+copyrator/load_crd.py
+copyrator/operator.py
+copyrator.egg-info/PKG-INFO
+copyrator.egg-info/SOURCES.txt
+copyrator.egg-info/dependency_links.txt
+copyrator.egg-info/entry_points.txt
+copyrator.egg-info/requires.txt
+copyrator.egg-info/top_level.txt

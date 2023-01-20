@@ -1,0 +1,3 @@
+[console_scripts]
+copyrator = copyrator.cli:main
+

@@ -1,0 +1,9 @@
+apiVersion: flant.com/v1
+kind: CopyratorRule
+metadata:
+  name: main-rule
+  labels:
+    module: copyrator
+ruleType: configmap
+selector: {"copyrator": "true"}
+namespace: default
