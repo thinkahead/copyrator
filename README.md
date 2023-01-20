@@ -19,3 +19,19 @@ optional arguments:
   --rule-name RULE_NAME
                         CRD Name (or ${RULE_NAME}), default: main-rule
 ``` 
+
+#### Debugging
+Get the cacert, cert and key from $KUBECONFIG. Then build and push the image and update the image in helm/templates/operator.py
+```
+echo certificate-authority-data | base64 -d > cacert
+echo client-certificate-data | base64 -d > cert
+echo client-key-data | base64 -d > key
+
+podman build -t docker.io/karve/copyrator2 -f Dockerfile .
+podman push docker.io/karve/copyrator2:latest
+
+helm install copyrator helm;oc apply -f main-rule.yaml
+oc apply -f test.yaml
+oc get cm -A --no-headers | grep example-configmap3 | awk '{print $1}' | xargs -n 1 oc delete cm example-configmap3 -n
+helm delete copyrator
+```
