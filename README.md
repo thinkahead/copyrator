@@ -63,7 +63,7 @@ oc apply -f test.yaml
 oc apply -f test2.yaml
 oc apply -f test3.yaml
 ```
-The main-rule.yaml has namespace: ["default","default2"]. So only the configmaps in default and default2 namespace will get propogateed to all other active namespaces. Thus the example-configmap1 from test.yaml in default namespace and example-configmap2 from test2.yaml in default2 namespace propogate to other namespaces. The example-configmap3 from test3.yaml in default3 namespace does not propogate to other namespaces.
+The main-rule.yaml has namespace: ["default","default2"]. So only the configmaps in default and default2 namespace will get propogated to all other active namespaces. Thus the example-configmap1 from test.yaml in default namespace and example-configmap2 from test2.yaml in default2 namespace propogate to other namespaces. The example-configmap3 from test3.yaml in default3 namespace does not propogate to other namespaces.
 
 
 Update the configmap and see that it changes
