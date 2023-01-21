@@ -22,6 +22,8 @@ optional arguments:
                         CRD Name (or ${RULE_NAME}), default: main-rule
 ``` 
 
+### Running the Operator in MicroShift
+We can setup the Operator to use the service token or the certificate from KUBECONFIG
 #### Setting up with serviceaccount and token
 Update the image: docker.io/karve/copyrator:latest in helm/templates/operator.yaml
 ```
@@ -44,12 +46,15 @@ podman build -t docker.io/karve/copyrator2 -f Dockerfile .
 podman push docker.io/karve/copyrator2:latest
 ```
 
-#### Running the Operator
+### Running the Operator
+#### Install the Operator
+This includes the copyrator deployment, rbac and crd. Also install the Custom Resource using the main-rule.yaml. This sample only uses the main-rule custom resource when the copyrator starts up. It does not look for additional instances of Custom Resources.
 ```
 helm install copyrator helm;oc apply -f main-rule.yaml
 ```
+The main-rule specifies that a watch should be kept on the configmaps (or alternatively secrets) in the given namespace array. Any new configmaps or changes to the configmaps should propagate to all other namespaces.
 
-### Debugging the Operator
+#### Debugging the Operator
 Create a configmap "example-configmap1" in default namespace, "example-configmap2" in default2 namespace, and "example-configmap3" in default3 namespace for testing
 ```
 oc create namespace default2
@@ -58,7 +63,7 @@ oc apply -f test.yaml
 oc apply -f test2.yaml
 oc apply -f test3.yaml
 ```
-The main-rule.yaml has namespace: ["default","default2"]. So only the configmaps in default and default2 namewspace will get propogateed to all other active namespaces. Thus the example-configmap1 from test.yaml in default namespace and example-configmap2 from test2.yaml in default2 namespace propogate to other namespaces. The example-configmap3 from test3.yaml in default3 namespace does not propogate to other namespaces.
+The main-rule.yaml has namespace: ["default","default2"]. So only the configmaps in default and default2 namespace will get propogateed to all other active namespaces. Thus the example-configmap1 from test.yaml in default namespace and example-configmap2 from test2.yaml in default2 namespace propogate to other namespaces. The example-configmap3 from test3.yaml in default3 namespace does not propogate to other namespaces.
 
 
 Update the configmap and see that it changes
