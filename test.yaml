@@ -1,12 +1,14 @@
 kind: ConfigMap 
 apiVersion: v1 
 metadata:
-  name: example-configmap3
+  name: example-configmap5
   namespace: default
   labels:
     copyrator: "true"
 data:
   # Configuration values can be set as key-value properties
   #database2: mongodb
+  #database3: mongodb
+  #database4: mongodb
   #database: mongodb
   database_uri: mongodb://localhost:27017

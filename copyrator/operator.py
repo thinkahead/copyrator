@@ -14,23 +14,22 @@ def handle_event(v1, specs, event):
     """
     The method for processing one Kubernetes event.
     """
-    print('event type',event['type'])
-    if event['type'] not in ALLOWED_EVENT_TYPES:
-        return
+    print(f'{event["type"]}')
+    if event['type'] not in ALLOWED_EVENT_TYPES: return
 
     object_ = event['object']
     labels = object_['metadata'].get('labels', {})
-    print("specs[selector]=",specs['selector'])
-    print("handle_event=",event['type'],object_['metadata']['name'],labels)
+    print(f'{specs["selector"]=}')
+    print(f'{event["type"]=} {object_["metadata"]["name"]=} {labels=}')
 
     #if len(specs['selector'].items())==0: return
     # Look for the matches using selector
     for key, value in specs['selector'].items():
-        print("   Checking",labels,key,value)
+        print("   Checking",key,value,'in',labels)
         if labels.get(key) != value:
             print("   Returning",key,value,"not found")
             return
-    print("Found",key,value)
+    print("Found",key,value,'in',labels)
     # Get active namespaces
     namespaces = map(
         lambda x: x.metadata.name,
@@ -42,7 +41,10 @@ def handle_event(v1, specs, event):
     print("Copying to","active namespaces")
     #print("Copying to",len(list(namespaces)),"active namespaces")
     for namespace in namespaces:
-        print('target namespace',namespace,object_['metadata']['name'],object_['metadata'].get('labels',{}))
+        if event['object']['metadata']['namespace']==namespace:
+            print('Not changing source/target namespace',namespace,object_['metadata']['name'],object_['metadata'].get('labels',{}))
+            continue
+        print('Changing target namespace',namespace,object_['metadata']['name'],object_['metadata'].get('labels',{}))
         # Clear the metadata, set the namespace
         object_['metadata'] = {
             'labels': object_['metadata'].get('labels',{}),
@@ -63,7 +65,6 @@ def handle_event(v1, specs, event):
             except kubernetes.client.rest.ApiException as e:
                 print("ignoring error in create",str(e))
 
-
 def handle(specs):
     """
     The main method to initiate events processing via operator.
@@ -72,10 +73,13 @@ def handle(specs):
     v1 = kubernetes.client.CoreV1Api()
 
     # Get the method to watch the objects
-    print('ruleType',specs['ruleType'],'selector',specs['selector'])
+    print(f'{specs["ruleType"]=} {specs["selector"]=}')
     method = getattr(v1, LIST_TYPES_MAP[specs['ruleType']])
-    func = partial(method, specs['namespace'])
+    #func = partial(method, specs['namespace'])
+    func = partial(method)
 
     w = kubernetes.watch.Watch()
     for event in w.stream(func): #, _request_timeout=60):
-        handle_event(v1, specs, event)
+        #print(event['object'])
+        #print(event['object']['metadata'])
+        if event['object']['metadata']['namespace'] in specs['namespace']: handle_event(v1, specs, event)

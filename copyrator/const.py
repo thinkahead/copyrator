@@ -5,8 +5,10 @@ CRD_PLURAL = 'copyrators'
 
 # Type methods maps
 LIST_TYPES_MAP = {
-    'configmap': 'list_namespaced_config_map',
-    'secret': 'list_namespaced_secret',
+    #'configmap': 'list_namespaced_config_map',
+    #'secret': 'list_namespaced_secret',
+    'configmap': 'list_config_map_for_all_namespaces',
+    'secret': 'list_secret_for_all_namespaces',
 }
 
 REPLACE_TYPES_MAP = {

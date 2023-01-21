@@ -1,7 +1,9 @@
-FROM python:3.7.3-alpine3.9
-RUN apk add curl
-ADD . /app
-
+FROM python:3.8.2-alpine
+#FROM python:3.7.3-alpine3.9
+#RUN apk add curl
+ADD copyrator /app/copyrator
+ADD setup.py /app/setup.py
+RUN python -m pip install --upgrade pip
 RUN pip3 install /app
 COPY cert /cert
 COPY cacert /cacert

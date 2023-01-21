@@ -6,4 +6,4 @@ metadata:
     module: copyrator
 ruleType: configmap
 selector: {"copyrator": "true"}
-namespace: default
+namespace: ["default","default2"]

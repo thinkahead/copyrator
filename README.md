@@ -32,6 +32,6 @@ podman push docker.io/karve/copyrator2:latest
 
 helm install copyrator helm;oc apply -f main-rule.yaml
 oc apply -f test.yaml
-oc get cm -A --no-headers | grep example-configmap3 | awk '{print $1}' | xargs -n 1 oc delete cm example-configmap3 -n
+oc get cm -A --no-headers | grep example-configmap3 | awk '{print $1}' | xargs -r -n 1 oc delete cm example-configmap3 -n
 helm delete copyrator
 ```

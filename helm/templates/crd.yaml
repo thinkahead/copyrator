@@ -15,7 +15,10 @@ spec:
           ruleType:
             type: string
           namespace:
-            type: string
+            #type: string
+            type: array
+            items:
+              type: string
           selector:
             type: object
             properties:
