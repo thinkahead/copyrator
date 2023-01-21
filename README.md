@@ -50,14 +50,35 @@ helm install copyrator helm;oc apply -f main-rule.yaml
 ```
 
 ### Debugging the Operator
+Create a configmap "example-configmap1" in default namespace, "example-configmap2" in default2 namespace, and "example-configmap3" in default3 namespace for testing
 ```
+oc create namespace default2
+oc create namespace default3
 oc apply -f test.yaml
+oc apply -f test2.yaml
+oc apply -f test3.yaml
+```
+The main-rule.yaml has namespace: ["default","default2"]. So only the configmaps in default and default2 namewspace will get propogateed to all other active namespaces. Thus the example-configmap1 from test.yaml in default namespace and example-configmap2 from test2.yaml in default2 namespace propogate to other namespaces. The example-configmap3 from test3.yaml in default3 namespace does not propogate to other namespaces.
+
+
+Update the configmap and see that it changes
+```
+oc edit cm example-configmap1 -n default # Modify it
+oc get cm example-configmap1 -o yaml -n default
+oc get cm example-configmap1 -o yaml -n default2 # See that this is also modified
+```
+
+We can cleanup the configmaps
+```
+oc get cm -A --no-headers | grep example-configmap1 | awk '{print $1}' | xargs -r -n 1 oc delete cm example-configmap1 -n
+oc get cm -A --no-headers | grep example-configmap2 | awk '{print $1}' | xargs -r -n 1 oc delete cm example-configmap2 -n
 oc get cm -A --no-headers | grep example-configmap3 | awk '{print $1}' | xargs -r -n 1 oc delete cm example-configmap3 -n
 ```
 
 #### Debugging the Operator pod
 ```
 oc exec -it deployment/copyrator -- sh
+cat /usr/local/lib/python3.8/site-packages/kubernetes/config/incluster_config.py
 ```
 
 #### Deleting the Operator
