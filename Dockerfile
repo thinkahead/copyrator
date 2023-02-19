@@ -1,4 +1,4 @@
-FROM python:3.8.2-alpine
+FROM docker.io/library/python:3.8.2-alpine
 #FROM python:3.7.3-alpine3.9
 #RUN apk add curl
 ADD copyrator /app/copyrator
